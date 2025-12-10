@@ -12,11 +12,13 @@ public class PlayerInventoryController : MonoBehaviour
         if (itemInstance == null)
             return;
 
+        var def = inventoryController.ItemLookup?.Invoke(itemInstance.itemId);
+        
         var go = Instantiate(worldItemPrefab, dropOrigin.position, Quaternion.identity);
         var worldItem = go.GetComponent<WorldItemView>();
         if (worldItem != null)
         {
-            worldItem.SetItem(itemInstance.itemId, itemInstance.amount);
+            worldItem.SetItem(itemInstance.itemId, itemInstance.amount, def?.icon);
         }
     }
 }
