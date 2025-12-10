@@ -3,15 +3,20 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
+    // References
+    [SerializeField] private Rigidbody2D rb2D;
+    [SerializeField] private Transform groundCheck;
+    [SerializeField] private LayerMask groundLayer;
+    [SerializeField] private PlayerAnimator playerAnimator;
+    // Configurations
+    [SerializeField] private float speedMovement = 5f;
+    [SerializeField] private float jumpForce = 8f;
+    [SerializeField] private float groundCheckRadius = 0.2f;
+    // State
     private Controller controller;
     private Vector2 direction;
-    [SerializeField] private Rigidbody2D rb2D;
-    public float speedMovement;
-    [SerializeField] private float jumpForce;
-    [SerializeField] private Transform groundCheck;
-    private float groundCheckRadius = 0.2f;
-    [SerializeField] private LayerMask groundLayer;
     private bool isGrounded;
+
 
     private void Awake()
     {
@@ -37,6 +42,7 @@ public class PlayerMovement : MonoBehaviour
     private void FixedUpdate()
     {
         rb2D.linearVelocity = new Vector2(speedMovement * direction.x, rb2D.linearVelocity.y);
+        playerAnimator.UpdateAnimation(rb2D.linearVelocity, isGrounded);
     }
 
     private void Jump(InputAction.CallbackContext context)
