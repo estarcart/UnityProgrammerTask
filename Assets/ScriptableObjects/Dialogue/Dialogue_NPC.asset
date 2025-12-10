@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1374da882bfd3f84d878f58817108853, type: 3}
+  m_Name: Dialogue_NPC
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueDefinition
+  dialogueId: 1
+  npcName: David
+  npcPortrait: {fileID: -427404151018760640, guid: 9f0490a77fc61524391c813079067ff6, type: 3}
+  nodes:
+  - id: start
+    text: Hello devs! Welcome to my videogame test.
+    choices:
+    - text: Goodbye!
+      nextNodeId: 
+      closesDialogue: 1
+    - text: Next
+      nextNodeId: talk
+      closesDialogue: 0
+  - id: talk
+    text: Now you are in talk dialogue
+    choices:
+    - text: Goodbye!
+      nextNodeId: 
+      closesDialogue: 1

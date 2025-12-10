@@ -1,23 +1,75 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerInteractionController : MonoBehaviour
 {
     [SerializeField] private InventoryController inventoryController;
 
-    void OnTriggerEnter2D(Collider2D other)
+    private Controller controller;
+    private IInteractable currentInteractable;
+
+    private void Awake()
+    {
+        controller = new Controller();
+    }
+
+    private void OnEnable()
+    {
+        controller.Enable();
+        controller.Base.Interaction.performed += OnInteract;
+    }
+
+    private void OnDisable()
+    {
+        controller.Base.Interaction.performed -= OnInteract;
+        controller.Disable();
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
     {
         var worldItem = other.GetComponent<WorldItemView>();
-        if (worldItem == null) return;
-        
+        if (worldItem != null)
+        {
+            TryPickupWorldItem(worldItem);
+        }
+
+        var interactable = other.GetComponent<IInteractable>();
+        if (interactable != null)
+        {
+            currentInteractable = interactable;
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        var interactable = other.GetComponent<IInteractable>();
+        if (interactable != null && interactable == currentInteractable)
+        {
+            currentInteractable = null;
+        }
+    }
+
+    private void TryPickupWorldItem(WorldItemView worldItem)
+    {
         if (!worldItem.gameObject.activeSelf) return;
 
         var instance = worldItem.ToItemInstance();
         bool added = inventoryController.TryAddItem(instance);
-        
+
         if (added)
         {
             worldItem.gameObject.SetActive(false);
             Destroy(worldItem.gameObject);
+        }
+    }
+
+    public void OnInteract(InputAction.CallbackContext context)
+    {
+        if (!context.performed) return;
+
+        if (currentInteractable != null)
+        {
+            currentInteractable.Interact(this);
         }
     }
 }
