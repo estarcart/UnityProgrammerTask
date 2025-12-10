@@ -109,6 +109,15 @@ public partial class @Controller: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""OpenInventory"",
+                    ""type"": ""Button"",
+                    ""id"": ""f9639ecc-53cc-4d6d-9f3a-586bf4054494"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -177,6 +186,28 @@ public partial class @Controller: IInputActionCollection2, IDisposable
                     ""action"": ""Jump"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""73196aaf-1391-4b8e-a7b7-15c13a9f28db"",
+                    ""path"": ""<Keyboard>/tab"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""OpenInventory"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""80837788-494c-4cb1-86d2-3dfef7649565"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""OpenInventory"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -187,6 +218,7 @@ public partial class @Controller: IInputActionCollection2, IDisposable
         m_Base = asset.FindActionMap("Base", throwIfNotFound: true);
         m_Base_Movement = m_Base.FindAction("Movement", throwIfNotFound: true);
         m_Base_Jump = m_Base.FindAction("Jump", throwIfNotFound: true);
+        m_Base_OpenInventory = m_Base.FindAction("OpenInventory", throwIfNotFound: true);
     }
 
     ~@Controller()
@@ -269,6 +301,7 @@ public partial class @Controller: IInputActionCollection2, IDisposable
     private List<IBaseActions> m_BaseActionsCallbackInterfaces = new List<IBaseActions>();
     private readonly InputAction m_Base_Movement;
     private readonly InputAction m_Base_Jump;
+    private readonly InputAction m_Base_OpenInventory;
     /// <summary>
     /// Provides access to input actions defined in input action map "Base".
     /// </summary>
@@ -288,6 +321,10 @@ public partial class @Controller: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Base/Jump".
         /// </summary>
         public InputAction @Jump => m_Wrapper.m_Base_Jump;
+        /// <summary>
+        /// Provides access to the underlying input action "Base/OpenInventory".
+        /// </summary>
+        public InputAction @OpenInventory => m_Wrapper.m_Base_OpenInventory;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -320,6 +357,9 @@ public partial class @Controller: IInputActionCollection2, IDisposable
             @Jump.started += instance.OnJump;
             @Jump.performed += instance.OnJump;
             @Jump.canceled += instance.OnJump;
+            @OpenInventory.started += instance.OnOpenInventory;
+            @OpenInventory.performed += instance.OnOpenInventory;
+            @OpenInventory.canceled += instance.OnOpenInventory;
         }
 
         /// <summary>
@@ -337,6 +377,9 @@ public partial class @Controller: IInputActionCollection2, IDisposable
             @Jump.started -= instance.OnJump;
             @Jump.performed -= instance.OnJump;
             @Jump.canceled -= instance.OnJump;
+            @OpenInventory.started -= instance.OnOpenInventory;
+            @OpenInventory.performed -= instance.OnOpenInventory;
+            @OpenInventory.canceled -= instance.OnOpenInventory;
         }
 
         /// <summary>
@@ -391,5 +434,12 @@ public partial class @Controller: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnJump(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "OpenInventory" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnOpenInventory(InputAction.CallbackContext context);
     }
 }

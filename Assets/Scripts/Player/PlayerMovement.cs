@@ -8,6 +8,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Transform groundCheck;
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private PlayerAnimator playerAnimator;
+    [SerializeField] private InventoryController inventoryController;
     // Configurations
     [SerializeField] private float speedMovement = 5f;
     [SerializeField] private float jumpForce = 8f;
@@ -35,6 +36,12 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
+        if (inventoryController != null && inventoryController.IsOpen)
+        {
+            direction = Vector2.zero;
+            return;
+        }
+        
         direction = controller.Base.Movement.ReadValue<Vector2>();
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
     }
@@ -47,6 +54,9 @@ public class PlayerMovement : MonoBehaviour
 
     private void Jump(InputAction.CallbackContext context)
     {
+        if (inventoryController != null && inventoryController.IsOpen)
+            return;
+            
         if (isGrounded)
         {
             rb2D.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
