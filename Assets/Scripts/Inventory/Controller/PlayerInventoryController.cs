@@ -4,7 +4,6 @@ public class PlayerInventoryController : MonoBehaviour
 {
     [SerializeField] private InventoryController inventoryController;
     [SerializeField] private HotbarController hotbarController;
-    [SerializeField] private GameObject worldItemPrefab;
     [SerializeField] private Transform dropOrigin;
 
     public void DropFromSlot(int slotIndex, int amount)
@@ -33,11 +32,14 @@ public class PlayerInventoryController : MonoBehaviour
 
     private void SpawnWorldItem(ItemInstance itemInstance, ItemDefinition def)
     {
-        var go = Instantiate(worldItemPrefab, dropOrigin.position, Quaternion.identity);
-        var worldItem = go.GetComponent<WorldItemView>();
-        if (worldItem != null)
+        if (WorldItemPool.Instance != null)
         {
-            worldItem.SetItem(itemInstance.itemId, itemInstance.amount, def?.icon);
+            WorldItemPool.Instance.Get(
+                dropOrigin.position,
+                itemInstance.itemId,
+                itemInstance.amount,
+                def?.icon
+            );
         }
     }
 }

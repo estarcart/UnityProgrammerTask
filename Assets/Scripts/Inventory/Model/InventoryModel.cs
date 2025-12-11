@@ -90,7 +90,7 @@ public class InventoryModel
         return result;
     }
 
-    public void Move(int fromIndex, int toIndex)
+    public void Move(int fromIndex, int toIndex, Func<string, ItemDefinition> itemLookup = null)
     {
         if (fromIndex == toIndex)
             return;
@@ -99,9 +99,34 @@ public class InventoryModel
             toIndex < 0 || toIndex >= slots.Count)
             return;
 
-        var temp = slots[fromIndex].item;
-        slots[fromIndex].item = slots[toIndex].item;
-        slots[toIndex].item = temp;
+        var fromItem = slots[fromIndex].item;
+        var toItem = slots[toIndex].item;
+
+        if (fromItem != null && toItem != null && fromItem.itemId == toItem.itemId && itemLookup != null)
+        {
+            var def = itemLookup(fromItem.itemId);
+            if (def != null && def.stackable)
+            {
+                int space = def.maxStack - toItem.amount;
+                if (space > 0)
+                {
+                    int toTransfer = Math.Min(space, fromItem.amount);
+                    toItem.amount += toTransfer;
+                    fromItem.amount -= toTransfer;
+
+                    if (fromItem.amount <= 0)
+                    {
+                        slots[fromIndex].item = null;
+                    }
+
+                    OnInventoryChanged?.Invoke();
+                    return;
+                }
+            }
+        }
+
+        slots[fromIndex].item = toItem;
+        slots[toIndex].item = fromItem;
 
         OnInventoryChanged?.Invoke();
     }
@@ -112,5 +137,10 @@ public class InventoryModel
             return null;
 
         return slots[index].item;
+    }
+
+    public void NotifyChanged()
+    {
+        OnInventoryChanged?.Invoke();
     }
 }

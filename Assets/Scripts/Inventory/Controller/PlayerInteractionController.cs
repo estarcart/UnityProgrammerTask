@@ -58,8 +58,15 @@ public class PlayerInteractionController : MonoBehaviour
 
         if (added)
         {
-            worldItem.gameObject.SetActive(false);
-            Destroy(worldItem.gameObject);
+            if (WorldItemPool.Instance != null)
+            {
+                WorldItemPool.Instance.Return(worldItem);
+            }
+            else
+            {
+                worldItem.gameObject.SetActive(false);
+                Destroy(worldItem.gameObject);
+            }
         }
     }
 

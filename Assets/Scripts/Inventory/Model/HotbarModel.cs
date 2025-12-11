@@ -169,4 +169,9 @@ public class HotbarModel
         }
         OnHotbarChanged?.Invoke();
     }
+
+    public void NotifyChanged()
+    {
+        OnHotbarChanged?.Invoke();
+    }
 }

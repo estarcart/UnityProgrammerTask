@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -158,7 +159,7 @@ public class InventoryController : MonoBehaviour, InventoryView.IInventoryViewLi
             if (inventorySlotView != null)
             {
                 int toIndex = inventorySlotView.SlotIndex;
-                inventoryModel.Move(fromIndex, toIndex);
+                inventoryModel.Move(fromIndex, toIndex, itemDatabase.GetItem);
             }
             else
             {
@@ -184,11 +185,59 @@ public class InventoryController : MonoBehaviour, InventoryView.IInventoryViewLi
 
     public bool TryAddItemToHotbarFirst(ItemInstance item)
     {
-        if (hotbarController != null && hotbarController.TryAddItem(item))
+        if (item == null || item.amount <= 0)
+            return false;
+
+        var def = itemDatabase.GetItem(item.itemId);
+        if (def == null)
+            return false;
+
+        int remaining = item.amount;
+
+        if (def.stackable)
+        {
+            remaining = TryStackIntoExisting(hotbarController?.Model?.Slots, item.itemId, remaining, def.maxStack);
+            if (remaining <= 0) return true;
+
+            remaining = TryStackIntoExisting(inventoryModel.Slots, item.itemId, remaining, def.maxStack);
+            if (remaining <= 0) return true;
+        }
+
+        var remainingItem = new ItemInstance(item.itemId, remaining);
+        if (hotbarController != null && hotbarController.TryAddItem(remainingItem))
         {
             return true;
         }
-        return TryAddItem(item);
+        return TryAddItem(remainingItem);
+    }
+
+    private int TryStackIntoExisting(System.Collections.Generic.IReadOnlyList<InventorySlot> slots, string itemId, int amount, int maxStack)
+    {
+        if (slots == null) return amount;
+
+        int remaining = amount;
+        for (int i = 0; i < slots.Count && remaining > 0; i++)
+        {
+            var slot = slots[i];
+            if (!slot.IsEmpty && slot.item.itemId == itemId)
+            {
+                int space = maxStack - slot.item.amount;
+                if (space > 0)
+                {
+                    int toAdd = Math.Min(space, remaining);
+                    slot.item.amount += toAdd;
+                    remaining -= toAdd;
+                }
+            }
+        }
+
+        if (remaining < amount)
+        {
+            hotbarController?.Model?.NotifyChanged();
+            inventoryModel?.NotifyChanged();
+        }
+
+        return remaining;
     }
 
     public ItemInstance RemoveItemFromSlot(int slotIndex, int amount)

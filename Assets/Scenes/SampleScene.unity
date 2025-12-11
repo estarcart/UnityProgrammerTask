@@ -3241,7 +3241,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInventoryController
   inventoryController: {fileID: 215004384}
   hotbarController: {fileID: 1853452579}
-  worldItemPrefab: {fileID: 5485281653729713634, guid: b3ef5d2d4332b1245864ea795c8d4ab3, type: 3}
   dropOrigin: {fileID: 1774724361}
 --- !u!114 &1884201071
 MonoBehaviour:
@@ -3477,6 +3476,53 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1948258211}
   m_CullTransparentMesh: 1
+--- !u!1 &2135393935
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2135393937}
+  - component: {fileID: 2135393936}
+  m_Layer: 0
+  m_Name: WorldItemPool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2135393936
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2135393935}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2db0d518892dba3479b947e543f02d48, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WorldItemPool
+  worldItemPrefab: {fileID: 5485281653729713634, guid: b3ef5d2d4332b1245864ea795c8d4ab3, type: 3}
+  initialPoolSize: 10
+  poolContainer: {fileID: 0}
+--- !u!4 &2135393937
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2135393935}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -3486,6 +3532,7 @@ SceneRoots:
   - {fileID: 215004385}
   - {fileID: 1718384958}
   - {fileID: 1853452580}
+  - {fileID: 2135393937}
   - {fileID: 1069882697}
   - {fileID: 619394802}
   - {fileID: 1884201066}

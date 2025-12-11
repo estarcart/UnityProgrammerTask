@@ -22,4 +22,12 @@ public class WorldItemView : MonoBehaviour
     {
         return new ItemInstance(itemId, amount);
     }
+
+    public void Reset()
+    {
+        itemId = string.Empty;
+        amount = 0;
+        if (spriteRenderer != null)
+            spriteRenderer.sprite = null;
+    }
 }
