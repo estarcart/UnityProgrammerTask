@@ -19,14 +19,14 @@ MonoBehaviour:
   - id: start
     text: Hello devs! Welcome to my videogame test.
     choices:
-    - text: Goodbye!
-      nextNodeId: 
-      closesDialogue: 1
     - text: Next
       nextNodeId: talk
       closesDialogue: 0
+    - text: Goodbye!
+      nextNodeId: 
+      closesDialogue: 1
   - id: talk
-    text: Now you are in talk dialogue
+    text: Hope you like my work! :)
     choices:
     - text: Goodbye!
       nextNodeId: 

@@ -12,6 +12,23 @@ public class InventorySlotView : MonoBehaviour, IPointerClickHandler, IPointerEn
 
     public int SlotIndex => slotIndex;
 
+    public Sprite GetIcon()
+    {
+        return iconImage != null && iconImage.enabled ? iconImage.sprite : null;
+    }
+
+    public void SetIconVisible(bool visible)
+    {
+        if (iconImage != null && iconImage.sprite != null)
+        {
+            iconImage.color = visible ? Color.white : Color.clear;
+        }
+        if (amountText != null)
+        {
+            amountText.color = visible ? Color.white : Color.clear;
+        }
+    }
+
     public void Initialize(int index, InventoryView view)
     {
         slotIndex = index;
