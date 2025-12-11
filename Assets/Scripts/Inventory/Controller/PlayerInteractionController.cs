@@ -54,7 +54,7 @@ public class PlayerInteractionController : MonoBehaviour
         if (!worldItem.gameObject.activeSelf) return;
 
         var instance = worldItem.ToItemInstance();
-        bool added = inventoryController.TryAddItem(instance);
+        bool added = inventoryController.TryAddItemToHotbarFirst(instance);
 
         if (added)
         {

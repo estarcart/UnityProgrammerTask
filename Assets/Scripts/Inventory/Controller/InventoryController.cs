@@ -10,6 +10,7 @@ public class InventoryController : MonoBehaviour, InventoryView.IInventoryViewLi
     [SerializeField] private int inventorySize = 20;
     [SerializeField] private GameObject inventoryPanel;
     [SerializeField] private PlayerInventoryController playerInventoryController;
+    [SerializeField] private HotbarController hotbarController;
 
     private Controller controller;
     private InventoryModel inventoryModel;
@@ -21,6 +22,7 @@ public class InventoryController : MonoBehaviour, InventoryView.IInventoryViewLi
     public InventoryModel Model => inventoryModel;
     public System.Func<string, ItemDefinition> ItemLookup => itemDatabase.GetItem;
     public bool IsOpen => isOpen;
+    public HotbarController Hotbar => hotbarController;
 
     void Awake()
     {
@@ -148,14 +150,27 @@ public class InventoryController : MonoBehaviour, InventoryView.IInventoryViewLi
             int fromIndex = draggingFromIndex.Value;
 
             var raycastResults = eventData.pointerCurrentRaycast;
-            var slotView = raycastResults.gameObject != null
+
+            var inventorySlotView = raycastResults.gameObject != null
                 ? raycastResults.gameObject.GetComponentInParent<InventorySlotView>()
                 : null;
 
-            if (slotView != null)
+            if (inventorySlotView != null)
             {
-                int toIndex = slotView.SlotIndex;
+                int toIndex = inventorySlotView.SlotIndex;
                 inventoryModel.Move(fromIndex, toIndex);
+            }
+            else
+            {
+                var hotbarSlotView = raycastResults.gameObject != null
+                    ? raycastResults.gameObject.GetComponentInParent<HotbarSlotView>()
+                    : null;
+
+                if (hotbarSlotView != null && hotbarController != null)
+                {
+                    int hotbarIndex = hotbarSlotView.SlotIndex;
+                    MoveToHotbar(fromIndex, hotbarIndex);
+                }
             }
 
             draggingFromIndex = null;
@@ -167,8 +182,63 @@ public class InventoryController : MonoBehaviour, InventoryView.IInventoryViewLi
         return inventoryModel.AddItem(item, itemDatabase.GetItem);
     }
 
+    public bool TryAddItemToHotbarFirst(ItemInstance item)
+    {
+        if (hotbarController != null && hotbarController.TryAddItem(item))
+        {
+            return true;
+        }
+        return TryAddItem(item);
+    }
+
     public ItemInstance RemoveItemFromSlot(int slotIndex, int amount)
     {
         return inventoryModel.RemoveAt(slotIndex, amount);
+    }
+
+    public void MoveToHotbar(int inventorySlotIndex, int hotbarSlotIndex)
+    {
+        if (hotbarController == null) return;
+
+        var item = inventoryModel.GetItem(inventorySlotIndex);
+        if (item == null) return;
+
+        var removedItem = inventoryModel.RemoveAt(inventorySlotIndex, item.amount);
+        if (removedItem != null)
+        {
+            var existingHotbarItem = hotbarController.GetItemAtSlot(hotbarSlotIndex);
+            
+            if (existingHotbarItem != null)
+            {
+                hotbarController.Model.ClearSlot(hotbarSlotIndex);
+                inventoryModel.AddItem(existingHotbarItem, itemDatabase.GetItem);
+            }
+
+            hotbarController.AssignItemToSlot(hotbarSlotIndex, removedItem);
+        }
+    }
+
+    public void MoveFromHotbar(int hotbarSlotIndex, int inventorySlotIndex)
+    {
+        if (hotbarController == null) return;
+
+        var item = hotbarController.GetItemAtSlot(hotbarSlotIndex);
+        if (item == null) return;
+
+        var removedItem = hotbarController.RemoveItemFromSlot(hotbarSlotIndex, item.amount);
+        if (removedItem != null)
+        {
+            var existingInventoryItem = inventoryModel.GetItem(inventorySlotIndex);
+            
+            if (existingInventoryItem != null)
+            {
+                inventoryModel.RemoveAt(inventorySlotIndex, existingInventoryItem.amount);
+                hotbarController.AssignItemToSlot(hotbarSlotIndex, existingInventoryItem);
+            }
+
+            var slot = inventoryModel.Slots[inventorySlotIndex];
+            slot.item = removedItem;
+            HandleInventoryChanged();
+        }
     }
 }
