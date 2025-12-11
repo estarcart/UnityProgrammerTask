@@ -40,6 +40,12 @@ public class PlayerInventoryController : MonoBehaviour
                 itemInstance.amount,
                 def?.icon
             );
+
+            string itemName = def != null ? def.displayName : itemInstance.itemId;
+            string message = itemInstance.amount > 1 
+                ? $"-{itemInstance.amount} {itemName}" 
+                : $"-1 {itemName}";
+            NotificationManager.Instance?.ShowError(message);
         }
     }
 }

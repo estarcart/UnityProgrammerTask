@@ -4,13 +4,19 @@ using UnityEngine;
 public class HealEffect : ItemEffect
 {
     [SerializeField] private int healAmount = 25;
+    [SerializeField] private string fullHealthMessage = "Already at full HP!";
 
     public override bool Apply(GameObject user, ItemInstance itemInstance, ItemDefinition itemDefinition)
     {
         var health = user.GetComponent<IHealthReceiver>();
         
         if (health == null) return false;
-        if (health.IsFullHealth) return false;
+        
+        if (health.IsFullHealth)
+        {
+            NotificationManager.Instance?.ShowWarning(fullHealthMessage, 3f);
+            return false;
+        }
 
         health.Heal(healAmount);
         return true;

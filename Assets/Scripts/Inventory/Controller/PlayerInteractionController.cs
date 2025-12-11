@@ -58,6 +58,13 @@ public class PlayerInteractionController : MonoBehaviour
 
         if (added)
         {
+            var itemDef = inventoryController.ItemLookup?.Invoke(instance.itemId);
+            string itemName = itemDef != null ? itemDef.displayName : instance.itemId;
+            string message = instance.amount > 1 
+                ? $"+{instance.amount} {itemName}" 
+                : $"+1 {itemName}";
+            NotificationManager.Instance?.ShowSuccess(message);
+
             if (WorldItemPool.Instance != null)
             {
                 WorldItemPool.Instance.Return(worldItem);
@@ -67,6 +74,10 @@ public class PlayerInteractionController : MonoBehaviour
                 worldItem.gameObject.SetActive(false);
                 Destroy(worldItem.gameObject);
             }
+        }
+        else
+        {
+            NotificationManager.Instance?.ShowError("Inventory full!");
         }
     }
 
