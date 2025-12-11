@@ -20,3 +20,5 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: f0f25d071da6716419a43816a0a3e299, type: 3}
   stackable: 1
   maxStack: 99
+  isUsable: 1
+  useEffect: {fileID: 11400000, guid: 4d292445cd3030944b0cc98ba7eb735e, type: 2}

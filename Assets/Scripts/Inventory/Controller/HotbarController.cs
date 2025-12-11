@@ -70,11 +70,13 @@ public class HotbarController : MonoBehaviour, HotbarView.IHotbarViewListener
         controller.Base.HotbarSlot8.performed += ctx => SelectSlot(7);
         controller.Base.HotbarSlot9.performed += ctx => SelectSlot(8);
         controller.Base.UseItem.performed += OnUseItemInput;
+        controller.Base.DropItem.performed += OnDropItemInput;
     }
 
     private void UnsubscribeFromHotbarInputs()
     {
         controller.Base.UseItem.performed -= OnUseItemInput;
+        controller.Base.DropItem.performed -= OnDropItemInput;
     }
 
     private void SelectSlot(int index)
@@ -85,6 +87,20 @@ public class HotbarController : MonoBehaviour, HotbarView.IHotbarViewListener
     private void OnUseItemInput(InputAction.CallbackContext context)
     {
         UseActiveItem();
+    }
+
+    private void OnDropItemInput(InputAction.CallbackContext context)
+    {
+        DropActiveItem();
+    }
+
+    public void DropActiveItem()
+    {
+        int activeIndex = hotbarModel.ActiveSlotIndex;
+        var item = hotbarModel.GetActiveItem();
+        if (item == null) return;
+
+        playerInventoryController.DropFromHotbar(activeIndex, 1);
     }
 
     public void UseActiveItem()

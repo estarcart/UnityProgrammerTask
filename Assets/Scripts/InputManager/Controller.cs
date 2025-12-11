@@ -217,6 +217,15 @@ public partial class @Controller: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""DropItem"",
+                    ""type"": ""Button"",
+                    ""id"": ""a1b2c3d4-4444-4444-4444-000000000001"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -388,11 +397,22 @@ public partial class @Controller: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""b1b2c3d4-2222-2222-2222-000000000001"",
-                    ""path"": ""<Mouse>/leftButton"",
+                    ""path"": ""<Keyboard>/f"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""UseItem"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b1b2c3d4-4444-4444-4444-000000000001"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""DropItem"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -417,6 +437,7 @@ public partial class @Controller: IInputActionCollection2, IDisposable
         m_Base_HotbarSlot8 = m_Base.FindAction("HotbarSlot8", throwIfNotFound: true);
         m_Base_HotbarSlot9 = m_Base.FindAction("HotbarSlot9", throwIfNotFound: true);
         m_Base_UseItem = m_Base.FindAction("UseItem", throwIfNotFound: true);
+        m_Base_DropItem = m_Base.FindAction("DropItem", throwIfNotFound: true);
     }
 
     ~@Controller()
@@ -511,6 +532,7 @@ public partial class @Controller: IInputActionCollection2, IDisposable
     private readonly InputAction m_Base_HotbarSlot8;
     private readonly InputAction m_Base_HotbarSlot9;
     private readonly InputAction m_Base_UseItem;
+    private readonly InputAction m_Base_DropItem;
     /// <summary>
     /// Provides access to input actions defined in input action map "Base".
     /// </summary>
@@ -579,6 +601,10 @@ public partial class @Controller: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @UseItem => m_Wrapper.m_Base_UseItem;
         /// <summary>
+        /// Provides access to the underlying input action "Base/DropItem".
+        /// </summary>
+        public InputAction @DropItem => m_Wrapper.m_Base_DropItem;
+        /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
         public InputActionMap Get() { return m_Wrapper.m_Base; }
@@ -646,6 +672,9 @@ public partial class @Controller: IInputActionCollection2, IDisposable
             @UseItem.started += instance.OnUseItem;
             @UseItem.performed += instance.OnUseItem;
             @UseItem.canceled += instance.OnUseItem;
+            @DropItem.started += instance.OnDropItem;
+            @DropItem.performed += instance.OnDropItem;
+            @DropItem.canceled += instance.OnDropItem;
         }
 
         /// <summary>
@@ -699,6 +728,9 @@ public partial class @Controller: IInputActionCollection2, IDisposable
             @UseItem.started -= instance.OnUseItem;
             @UseItem.performed -= instance.OnUseItem;
             @UseItem.canceled -= instance.OnUseItem;
+            @DropItem.started -= instance.OnDropItem;
+            @DropItem.performed -= instance.OnDropItem;
+            @DropItem.canceled -= instance.OnDropItem;
         }
 
         /// <summary>
@@ -837,5 +869,12 @@ public partial class @Controller: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnUseItem(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "DropItem" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnDropItem(InputAction.CallbackContext context);
     }
 }
