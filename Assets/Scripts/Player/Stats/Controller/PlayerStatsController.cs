@@ -4,6 +4,8 @@ using System;
 public class PlayerStatsController : MonoBehaviour, IHealthReceiver, IDamageable
 {
     [SerializeField] private StatController healthController;
+    [SerializeField] private GameResetController gameResetController;
+    [SerializeField] private float deathResetDelay = 3f;
 
     public event Action OnPlayerDeath;
 
@@ -43,5 +45,45 @@ public class PlayerStatsController : MonoBehaviour, IHealthReceiver, IDamageable
     private void HandleHealthDepleted()
     {
         OnPlayerDeath?.Invoke();
+        
+        DisablePlayer();
+        NotificationManager.Instance?.ShowError("You are dead");
+        Invoke(nameof(ResetAfterDeath), deathResetDelay);
+    }
+
+    private void DisablePlayer()
+    {
+        var movement = GetComponent<PlayerMovement>();
+        if (movement != null)
+        {
+            movement.enabled = false;
+        }
+
+        var rb = GetComponent<Rigidbody2D>();
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector2.zero;
+            rb.simulated = false;
+        }
+
+        var spriteRenderer = GetComponent<SpriteRenderer>();
+        if (spriteRenderer != null)
+        {
+            spriteRenderer.enabled = false;
+        }
+
+        var collider = GetComponent<Collider2D>();
+        if (collider != null)
+        {
+            collider.enabled = false;
+        }
+    }
+
+    private void ResetAfterDeath()
+    {
+        if (gameResetController != null)
+        {
+            gameResetController.ResetGame();
+        }
     }
 }

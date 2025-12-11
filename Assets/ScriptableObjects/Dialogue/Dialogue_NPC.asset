@@ -17,17 +17,17 @@ MonoBehaviour:
   npcPortrait: {fileID: -427404151018760640, guid: 9f0490a77fc61524391c813079067ff6, type: 3}
   nodes:
   - id: start
-    text: Hello devs! Welcome to my videogame test.
+    text: Hello devs! Welcome to my videogame test. Hope you like my work! :)
     choices:
-    - text: Next
-      nextNodeId: talk
+    - text: Give me a tip
+      nextNodeId: tip
       closesDialogue: 0
     - text: Goodbye!
       nextNodeId: 
       closesDialogue: 1
-  - id: talk
-    text: Hope you like my work! :)
+  - id: tip
+    text: If your health is low, try to drink a potion!
     choices:
-    - text: Goodbye!
+    - text: Ok, goodbye!
       nextNodeId: 
       closesDialogue: 1

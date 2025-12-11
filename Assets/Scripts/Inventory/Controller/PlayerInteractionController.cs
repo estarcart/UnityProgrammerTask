@@ -37,6 +37,7 @@ public class PlayerInteractionController : MonoBehaviour
         if (interactable != null)
         {
             currentInteractable = interactable;
+            currentInteractable.ShowInteractionIndicator();
         }
     }
 
@@ -45,6 +46,7 @@ public class PlayerInteractionController : MonoBehaviour
         var interactable = other.GetComponent<IInteractable>();
         if (interactable != null && interactable == currentInteractable)
         {
+            currentInteractable.HideInteractionIndicator();
             currentInteractable = null;
         }
     }

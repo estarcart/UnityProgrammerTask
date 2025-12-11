@@ -19,4 +19,4 @@ MonoBehaviour:
   regenerates: 1
   regenRate: 1
   regenDelay: 3
-  barColor: {r: 1, g: 0, b: 0, a: 1}
+  barColor: {r: 0.053107735, g: 0.4669811, b: 0, a: 1}
