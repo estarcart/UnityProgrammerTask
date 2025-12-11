@@ -174,4 +174,31 @@ public class HotbarModel
     {
         OnHotbarChanged?.Invoke();
     }
+
+    public void LoadFromSaveData(System.Collections.Generic.List<SlotSaveData> slotData, int activeSlot)
+    {
+        for (int i = 0; i < slots.Count; i++)
+        {
+            slots[i].item = null;
+        }
+
+        if (slotData != null)
+        {
+            foreach (var data in slotData)
+            {
+                if (data.slotIndex >= 0 && data.slotIndex < slots.Count && !data.IsEmpty)
+                {
+                    slots[data.slotIndex].item = new ItemInstance(data.itemId, data.amount);
+                }
+            }
+        }
+
+        OnHotbarChanged?.Invoke();
+
+        if (activeSlot >= 0 && activeSlot < slots.Count)
+        {
+            activeSlotIndex = activeSlot;
+            OnActiveSlotChanged?.Invoke(activeSlotIndex);
+        }
+    }
 }

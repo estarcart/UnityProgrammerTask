@@ -143,4 +143,34 @@ public class InventoryModel
     {
         OnInventoryChanged?.Invoke();
     }
+
+    public void LoadFromSaveData(System.Collections.Generic.List<SlotSaveData> slotData)
+    {
+        for (int i = 0; i < slots.Count; i++)
+        {
+            slots[i].item = null;
+        }
+
+        if (slotData == null) return;
+
+        foreach (var data in slotData)
+        {
+            if (data.slotIndex >= 0 && data.slotIndex < slots.Count && !data.IsEmpty)
+            {
+                slots[data.slotIndex].item = new ItemInstance(data.itemId, data.amount);
+            }
+        }
+
+        OnInventoryChanged?.Invoke();
+    }
+
+    public void Clear()
+    {
+        for (int i = 0; i < slots.Count; i++)
+        {
+            slots[i].item = null;
+        }
+
+        OnInventoryChanged?.Invoke();
+    }
 }

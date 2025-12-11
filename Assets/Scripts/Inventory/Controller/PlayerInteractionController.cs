@@ -65,6 +65,8 @@ public class PlayerInteractionController : MonoBehaviour
                 : $"+1 {itemName}";
             NotificationManager.Instance?.ShowSuccess(message);
 
+            worldItem.MarkAsCollected();
+
             if (WorldItemPool.Instance != null)
             {
                 WorldItemPool.Instance.Return(worldItem);
