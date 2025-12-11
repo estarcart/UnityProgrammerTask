@@ -30,29 +30,10 @@ public class WorldItemSaveController : MonoBehaviour
         RestoreDroppedItems();
     }
 
-    void OnApplicationQuit()
-    {
-        CaptureDroppedItems();
-        Save();
-    }
-
-    void OnApplicationPause(bool pauseStatus)
-    {
-        if (pauseStatus)
-        {
-            CaptureDroppedItems();
-            Save();
-        }
-    }
-
     public void RegisterCollectedItem(string uniqueId)
     {
         if (string.IsNullOrEmpty(uniqueId)) return;
-
-        if (collectedItemIds.Add(uniqueId))
-        {
-            Save();
-        }
+        collectedItemIds.Add(uniqueId);
     }
 
     public bool IsItemCollected(string uniqueId)
@@ -63,6 +44,8 @@ public class WorldItemSaveController : MonoBehaviour
 
     public void Save()
     {
+        CaptureDroppedItems();
+
         var saveData = new WorldItemsSaveData();
         saveData.collectedItemIds = new List<string>(collectedItemIds);
         saveData.droppedItems = new List<DroppedItemSaveData>(droppedItems);

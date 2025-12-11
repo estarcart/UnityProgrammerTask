@@ -5,7 +5,6 @@ public class InventorySaveController : MonoBehaviour
 {
     [SerializeField] private InventoryController inventoryController;
     [SerializeField] private HotbarController hotbarController;
-    [SerializeField] private bool autoSaveOnChange = true;
     [SerializeField] private string saveFileName = "inventory.json";
 
     private string SaveFilePath => Path.Combine(Application.persistentDataPath, saveFileName);
@@ -13,65 +12,6 @@ public class InventorySaveController : MonoBehaviour
     void Start()
     {
         Load();
-
-        if (autoSaveOnChange)
-        {
-            SubscribeToChanges();
-        }
-    }
-
-    void OnDestroy()
-    {
-        if (autoSaveOnChange)
-        {
-            UnsubscribeFromChanges();
-        }
-    }
-
-    void OnApplicationQuit()
-    {
-        Save();
-    }
-
-    void OnApplicationPause(bool pauseStatus)
-    {
-        if (pauseStatus)
-        {
-            Save();
-        }
-    }
-
-    private void SubscribeToChanges()
-    {
-        if (inventoryController != null && inventoryController.Model != null)
-        {
-            inventoryController.Model.OnInventoryChanged += Save;
-        }
-
-        if (hotbarController != null && hotbarController.Model != null)
-        {
-            hotbarController.Model.OnHotbarChanged += Save;
-            hotbarController.Model.OnActiveSlotChanged += OnActiveSlotChanged;
-        }
-    }
-
-    private void UnsubscribeFromChanges()
-    {
-        if (inventoryController != null && inventoryController.Model != null)
-        {
-            inventoryController.Model.OnInventoryChanged -= Save;
-        }
-
-        if (hotbarController != null && hotbarController.Model != null)
-        {
-            hotbarController.Model.OnHotbarChanged -= Save;
-            hotbarController.Model.OnActiveSlotChanged -= OnActiveSlotChanged;
-        }
-    }
-
-    private void OnActiveSlotChanged(int slotIndex)
-    {
-        Save();
     }
 
     public void Save()
@@ -82,9 +22,12 @@ public class InventorySaveController : MonoBehaviour
         try
         {
             File.WriteAllText(SaveFilePath, json);
+            WorldItemSaveController.Instance?.Save();
+            NotificationManager.Instance?.ShowSuccess("Game saved successfully!");
         }
         catch (System.Exception)
         {
+            NotificationManager.Instance?.ShowError("Failed to save game.");
         }
     }
 
